@@ -1,0 +1,30 @@
+
+<div class="centers view" ng-controller="CentersCtrl">
+
+    <form class="ui form segment">
+    <div class="container">
+        <header>
+            <h3>Centers</h3>
+        </header>
+
+        <div>
+           <h4>centers : 
+           </h4>
+            <div class="ngGrid" >
+              <div>
+                <div ng-grid="gridCenter" class="well"></div>
+              </div>
+            </div>
+            <div class="span4">
+                <input ng-model="newCenter.code" type="hidden">
+                <commbutton type="insert" data="Center"></commbutton>
+                <commbutton type="delete" data="Center"></commbutton>
+                <commbutton type="save" data="Center" dataset="uip_centers"></commbutton>
+                <commbutton type="init" data="Center"></commbutton>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+
