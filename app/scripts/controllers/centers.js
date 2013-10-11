@@ -3,12 +3,15 @@
 angular.module('sheepgridApp')
   .controller('CentersCtrl', function ($scope, $location, $routeParams, config, CenterService) {
 	$scope.$location = $location;
-    $scope.newCenter = {};
 
     $scope.updateEntity = function(column, row, cellValue) {
         var data = $scope.uip_centers[row.rowIndex];
-        if(data[column.colDef.field] != cellValue) {
-            $scope.uip_centers[row.rowIndex].status = 'U';
+        var status = $scope.uip_centers[row.rowIndex].status;
+        if(status && status == 'I') {
+        } else {
+            if(data[column.colDef.field] != cellValue) {
+                $scope.uip_centers[row.rowIndex].status = 'U';
+            }
         }
         row.entity[column.field] = cellValue;
     };
@@ -42,22 +45,16 @@ angular.module('sheepgridApp')
         }
     };
 
-	CenterService.get({}, function(data) {
-	 	$scope.uip_centers = data.uip_centers;
-	    if($location.$$path != '/centers') {
-	    	var id = $routeParams.id;
-			lookupDs(id, function (row){
-				$scope.newCenter = $scope.uip_centers[row];
-			});
-	    }
-	});
+    function getCenters() {
+        CenterService.get({}, function(data) {
+            $scope.uip_centers = data.uip_centers;
+        });
+    };
 
-    var getInitObj = function(source) {
-        var data = angular.copy(source);
-        for (var i = 0; i < Object.keys(data).length; i++) {
-            data[Object.keys(data)[i]] = null;
-        };
-        return data;
+    getCenters();
+
+    $scope.getCenter = function () {
+        getCenters();
     };
 
     $scope.insertCenter = function () {
@@ -93,16 +90,15 @@ angular.module('sheepgridApp')
         for (var i = 0; i < center.length; i++) {
             if(center[i].status) {
                 if(center[i].status == 'I') {
-                    $scope.newCenter.id = '';
-                    var params = {uip_center : $scope.newCenter};
-                    if(config.server == 'spring') params = $scope.newCenter; // java
+                    var params = {uip_center : center[i]};
+                    if(config.server == 'spring') params = center[i]; // java
                     CenterService.save(params, function (data) {
                         $scope.uip_centers.unshift(data.uip_center);
                         console.log(data);
                     })
                 } else if(center[i].status == 'U') {
-                    var params = {uip_center : $scope.newCenter,
-                                 id : $scope.newCenter.id};
+                    var params = {uip_center : center[i],
+                                 id : center[i].id};
                     if(config.server == 'spring') params = params.uip_center; // java
                     CenterService.update(params, function (data) {
                         console.log(data);
@@ -130,5 +126,13 @@ angular.module('sheepgridApp')
 			}
 		}
 	}
+
+    var getInitObj = function(source) {
+        var data = angular.copy(source);
+        for (var i = 0; i < Object.keys(data).length; i++) {
+            data[Object.keys(data)[i]] = null;
+        };
+        return data;
+    };
 
   });
