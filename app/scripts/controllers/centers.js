@@ -20,6 +20,7 @@ angular.module('sheepgridApp')
             cellTemplate:checkboxCellTemplate,
             sortable:false, pinned:false, enableCellEdit: false },
         {field:'status', displayName:'CRUD', width: 50 , sortable:false, pinned:false, enableCellEdit: false },
+        {field:'link', displayName:'link', width: 80, cellTemplate: '<div><button ng-click="goTo(\'/regions/\', row)">to region</button></div>'},
         {field:'id', displayName:'id', enableCellEdit: false},
         {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
         {field:'name', displayName:'name', editableCellTemplate: cellEditableTemplate},
@@ -33,6 +34,6 @@ angular.module('sheepgridApp')
         }
     };
 	
-	CommongridService.init($scope, $timeout, config, CenterService, 'gridCenter', 'uip_center');
+	CommongridService.init($scope, $timeout, config, CenterService, 'gridCenter');
 	
   });

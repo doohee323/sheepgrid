@@ -11,104 +11,17 @@
            </h4>
             <div class="ngGrid" >
               <div>
-                <div ng-grid="gridOptions" class="well"></div>
+                <div ng-grid="gridRegion" class="well"></div>
               </div>
             </div>
-        </div>
-
-       <div class="row">
-            <div class="span3">
-                uip_center_id:
-                <br />
-                <input ng-model="newRegion.uip_center_id" type="text" ng-disabled="true" placeholder="uip_center_id">
-            </div>
-            <div class="span3">
-                id:
-                <br />
-                <input ng-model="newRegion.id" type="text" ng-disabled="true" placeholder="id">
-            </div>
-            <div class="span3">
-                code:
-                <br />
-                <input ng-model="newRegion.code" type="text" placeholder="code">
-            </div>
-            <div class="span3">
-                region_code:
-                <br />
-                <input ng-model="newRegion.region_code" type="text" placeholder="region_code">
-            </div>
-            <div class="span3">
-                name:
-                <br />
-                <input ng-model="newRegion.name" type="text" placeholder="name">
-            </div>
-            <div class="span3">
-                chief:
-                <br />
-                <input ng-model="newRegion.chief" type="text" placeholder="chief">
-            </div>
-            <div class="span3">
-                address:
-                <br />
-                <input ng-model="newRegion.address" type="text" placeholder="address">
-            </div>
-            <div class="span3">
-            	<input ng-model="newRegion.code" type="hidden">
-				<commbutton type="add" data="Region"></commbutton>
-				<commbutton type="update" data="Region" dataset="newRegion"></commbutton>
-				<commbutton type="delete" data="Region" dataset="newRegion"></commbutton>
+            <div class="span4">
+                <commbutton type="retrieve" data="Region"></commbutton>
+                <commbutton type="insert" data="Region"></commbutton>
+                <commbutton type="delete" data="Region"></commbutton>
+                <commbutton type="save" data="Region"></commbutton>
                 <commbutton type="init" data="Region"></commbutton>
-                <commbutton type="goHome" data="Region"></commbutton>
             </div>
         </div>
-        <br /><br />
-        <div>
-
-<!-- <table class="table table-hover table-striped table-condensed table-bregioned regionsTable">
-    <thead>
-        <tr>
-            <th ng-click="setOrder('region_code')">region_code</th>
-            <th ng-click="setOrder('name')">name</th>
-            <th ng-click="setOrder('chief')">chief</th>
-            <th ng-click="setOrder('address')">address</th>
-            <th ng-click="setOrder('updated_at')">updated_at</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-hide="uip_regions || uip_regions.length > 0" class="error">
-            <td colspan="5">
-                <div class="text-center"><strong>No regions found</strong></div>
-            </td>
-        </tr>
-        <tr ng-click="editRegion(region)" ng-repeat="region in uip_regions | orderBy:orderby:reverse">
-            <td>
-                {{ region.region_code }}
-            </td>
-            <td>
-                {{ region.name }}
-            </td>
-            <td>
-                {{ region.chief }}
-            </td>
-            <td>
-                {{ region.address }}
-            </td>
-            <td>
-                {{ region.updated_at | agoText }}
-            </td>
-        </tr>
-        <tr class="info">
-            <td colspan="4">
-                &nbsp;
-            </td>
-            <td>
-                <strong>{{ regionsTotal }}</strong>
-            </td>
-        </tr>
-    </tbody>
-</table> -->
-
         </div>
-    </div>
     </form>
 </div>

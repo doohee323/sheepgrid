@@ -6,9 +6,10 @@ angular.module('sheepgridApp')
 	var _dataset = null;	// ex) uip_center
 	var _dataset2 = null;	// ex) uip_centers
 	
-	this.init = function($scope, $timeout, config, service, grid, dataset) {
-		_dataset = dataset;
-		_dataset2 = dataset + 's';
+	this.init = function($scope, $timeout, config, service, grid, input) {
+		_dataset = $scope[grid].data;
+		_dataset2 = _dataset + 's';
+
 	    $scope.updateEntity = function(column, row, cellValue) {
 	        var data = $scope[_dataset][row.rowIndex];
 	        var status = $scope[_dataset][row.rowIndex].status;
@@ -21,8 +22,11 @@ angular.module('sheepgridApp')
 	        row.entity[column.field] = cellValue;
 	    };
 
-	    function getDatas() {
-	        service.get({}, function(data) {
+	    function getDatas(input) {
+	    	var params = {};
+	    	debugger
+	    	if(input) params = input;
+	        service.get(params, function(data) {
 	            for (var i = 0; i < data[_dataset2].length; i++) {
 	                data[_dataset2][i].status = 'R';
 	            };
@@ -30,7 +34,8 @@ angular.module('sheepgridApp')
 	        });
 	    };
 
-	    getDatas();
+	    debugger
+	    getDatas(input);
 
 	    $scope.$on('ngGridEventData', function (e,s) {
 	        if($scope[grid].selectRow) {
@@ -39,8 +44,8 @@ angular.module('sheepgridApp')
 	        }
 	    });    
 
-	    $scope.retrieveData = function () {
-	        getDatas();
+	    $scope.retrieveData = function (input) {
+	        getDatas(input);
 	    };
 
 	    $scope.insertData = function () {

@@ -3,7 +3,7 @@
 angular.module('sheepgridApp')
   .directive('commbutton', function($compile) {
 		var getTemplate = function(aType, aData, aDataset) {
-			var template = '<button id="' + aType + aData + '" class="btn btn-primary" type="button" ng-click="' + aType + aData;
+			var template = '<button id="' + aType + aData + '" class="btn btn-primary" type="button" ng-click="' + aType + 'Data';
 			if(aDataset) {
 				template += '(' + aDataset + ')"';
 			} else {
