@@ -20,8 +20,8 @@ angular.module('sheepgridApp')
             cellTemplate:checkboxCellTemplate,
             sortable:false, pinned:false, enableCellEdit: false },
         {field:'status', displayName:'CRUD', width: 50 , sortable:false, pinned:false, enableCellEdit: false },
-        {field:'id', displayName:'id', enableCellEdit: false},
         {field:'uip_center_id', displayName:'uip_center_id', enableCellEdit: false},
+        {field:'id', displayName:'id', enableCellEdit: false},
         {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
         {field:'region_code', displayName:'region_code', editableCellTemplate: cellEditableTemplate},
         {field:'name', displayName:'name', editableCellTemplate: cellEditableTemplate},
@@ -36,5 +36,10 @@ angular.module('sheepgridApp')
     
     var params = {uip_center_id: $routeParams.id};
     CommongridService.init($scope, $timeout, config, RegionService, 'gridRegion', params);
+
+    $scope.goHomeData = function () {
+        var path = '/centers';
+        $location.path( path );
+    }
 
   });

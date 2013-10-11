@@ -5,10 +5,12 @@ angular.module('sheepgridApp')
 
 	var _dataset = null;	// ex) uip_center
 	var _dataset2 = null;	// ex) uip_centers
+	var _input = null;	// params
 	
 	this.init = function($scope, $timeout, config, service, grid, input) {
 		_dataset = $scope[grid].data;
 		_dataset2 = _dataset + 's';
+		_input = input;
 
 	    $scope.updateEntity = function(column, row, cellValue) {
 	        var data = $scope[_dataset][row.rowIndex];
@@ -24,7 +26,6 @@ angular.module('sheepgridApp')
 
 	    function getDatas(input) {
 	    	var params = {};
-	    	debugger
 	    	if(input) params = input;
 	        service.get(params, function(data) {
 	            for (var i = 0; i < data[_dataset2].length; i++) {
@@ -34,8 +35,7 @@ angular.module('sheepgridApp')
 	        });
 	    };
 
-	    debugger
-	    getDatas(input);
+	    getDatas(_input);
 
 	    $scope.$on('ngGridEventData', function (e,s) {
 	        if($scope[grid].selectRow) {
@@ -45,12 +45,14 @@ angular.module('sheepgridApp')
 	    });    
 
 	    $scope.retrieveData = function (input) {
+	    	if(_input) input = _input;
 	        getDatas(input);
 	    };
 
 	    $scope.insertData = function () {
 	        var data = $scope[grid].columnDefs;
 	        var newData = getAddRow(data);
+	        if(_input) newData = mergeData(_input, newData);
 	        newData.status = 'I';
 	        $scope[_dataset].unshift(newData);
 
@@ -124,14 +126,23 @@ angular.module('sheepgridApp')
 			}
 		}
 
-	    var getAddRow = function(source) {
+		var getAddRow = function(source) {
 	        var data = angular.copy(source);
 	        var target = {};
 	        for (var i = 0; i < data.length; i++) {
-	            if(data[i].field && data[i].field != 'CHK') {
+	            if(data[i].field 
+	            	&& data[i].field != 'link'
+	            	&& data[i].field != 'CHK') {
 	                target[data[i].field] = null;
 	            }
 	        };
+	        return target;
+	    };		
+
+	    var mergeData = function(source, target) {
+	        for (var j = 0; j < Object.keys(source).length; j++) {
+                target[Object.keys(source)[j]] = source[Object.keys(source)[j]];
+            };
 	        return target;
 	    };
 	}
