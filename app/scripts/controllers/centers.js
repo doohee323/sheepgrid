@@ -8,7 +8,7 @@ angular.module('sheepgridApp')
     var checkboxCellTemplate='<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>';
     var cellEditableTemplate = "<input style=\"width: 90%\" step=\"any\" type=\"string\" ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-blur=\"updateEntity(col, row, cellValue)\" ng-model='cellValue'/>";
     $scope.gridCenter = {
-        data: 'uip_centers',
+        data: 'uip_center',
         multiSelect: false,  
         enableCellSelection: true,
         enableCellEditOnFocus: true,
@@ -33,6 +33,6 @@ angular.module('sheepgridApp')
         }
     };
 	
-	CommongridService.init($scope, config, CenterService);
+	CommongridService.init($scope, $timeout, config, CenterService, 'gridCenter', 'uip_center');
 	
   });

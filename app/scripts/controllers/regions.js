@@ -28,10 +28,10 @@ angular.module('sheepgridApp')
     $scope.center_id = center_id;
 
     function getRegions() {
-        if($scope.uip_centers) center_id = $scope.uip_centers.id;
+        if($scope.uip_center) center_id = $scope.uip_center.id;
         RegionService.get({id: center_id}, function(data) {
             $scope.uip_regions = data.uip_regions;
-            $scope.uip_centers = angular.copy(config.centers);
+            $scope.uip_center = angular.copy(config.centers);
             $scope.gridOptions = data.uip_regions;
             if(data.uip_regions.length > 0) {
                 $scope.newRegion =  data.uip_regions[0];

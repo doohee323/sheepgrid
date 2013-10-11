@@ -7,7 +7,7 @@
 
         <div>
            <h4>centers : 
-            <select ng-model="uip_centers" ng-selected="center_id" ng-change="getRegions()" ng-options="uip_center.name for uip_center in uip_centers | orderBy:orderby:reverse"></select>
+            <select ng-model="uip_center" ng-selected="center_id" ng-change="getRegions()" ng-options="uip_center.name for uip_center in uip_center | orderBy:orderby:reverse"></select>
            </h4>
             <div class="ngGrid" >
               <div>

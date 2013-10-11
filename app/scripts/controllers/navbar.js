@@ -9,8 +9,8 @@ angular.module('sheepgridApp')
     	} else if(center) {
     		path += center.id;
             if(centers) config.centers = centers;
-    	} else if($scope.uip_centers[0]) {
-    		path += $scope.uip_centers[0].id;
+    	} else if($scope.uip_center[0]) {
+    		path += $scope.uip_center[0].id;
     	}
 	  	$location.path( path );
 	}	

@@ -3,110 +3,116 @@
 angular.module('sheepgridApp')
 .service('CommongridService', function () {
 
-	this.init = function($scope, config, CenterService) {
+	var _dataset = null;	// ex) uip_center
+	var _dataset2 = null;	// ex) uip_centers
+	
+	this.init = function($scope, $timeout, config, service, grid, dataset) {
+		_dataset = dataset;
+		_dataset2 = dataset + 's';
 	    $scope.updateEntity = function(column, row, cellValue) {
-	        var data = $scope.uip_centers[row.rowIndex];
-	        var status = $scope.uip_centers[row.rowIndex].status;
+	        var data = $scope[_dataset][row.rowIndex];
+	        var status = $scope[_dataset][row.rowIndex].status;
 	        if(status && status == 'I') {
 	        } else {
 	            if(data[column.colDef.field] != cellValue) {
-	                $scope.uip_centers[row.rowIndex].status = 'U';
+	                $scope[_dataset][row.rowIndex].status = 'U';
 	            }
 	        }
 	        row.entity[column.field] = cellValue;
 	    };
 
-	    function getCenters() {
-	        CenterService.get({}, function(data) {
-	            for (var i = 0; i < data.uip_centers.length; i++) {
-	                data.uip_centers[i].status = 'R';
+	    function getDatas() {
+	        service.get({}, function(data) {
+	            for (var i = 0; i < data[_dataset2].length; i++) {
+	                data[_dataset2][i].status = 'R';
 	            };
-	            $scope.uip_centers = data.uip_centers;
+	            $scope[_dataset] = data[_dataset2];
 	        });
 	    };
 
-	    getCenters();
+	    getDatas();
 
 	    $scope.$on('ngGridEventData', function (e,s) {
-	        if($scope.gridCenter.selectRow) {
-	            $scope.gridCenter.selectRow(0, true);
+	        if($scope[grid].selectRow) {
+	            $scope[grid].selectRow(0, true);
 	            $(".ngViewport").focus();
 	        }
 	    });    
 
-	    $scope.retrieveCenter = function () {
-	        getCenters();
+	    $scope.retrieveData = function () {
+	        getDatas();
 	    };
 
-	    $scope.insertCenter = function () {
-	        var data = $scope.gridCenter.columnDefs;
+	    $scope.insertData = function () {
+	        var data = $scope[grid].columnDefs;
 	        var newData = getAddRow(data);
 	        newData.status = 'I';
-	        $scope.uip_centers.unshift(newData);
+	        $scope[_dataset].unshift(newData);
 
 	        var selectRow = function() {
-	            $scope.gridCenter.selectRow(0, true);
+	            $scope[grid].selectRow(0, true);
 	            //$($($(".ngCellText.col3.colt1")[1]).parent()).parent().focus();
 	        }
 	        $timeout(selectRow, 500);
 	    };
 
-	    $scope.deleteCenter = function () {
-	        var id = $scope.gridCenter.selectedItems[0].id;
-	        for (var i = 0; i < $scope.uip_centers.length; i++) {
-	            if($scope.uip_centers[i].id == id) {
-	                if($scope.uip_centers[i].status == 'I') {
-	                    $scope.uip_centers.splice(i, 1);
+	    $scope.deleteData = function () {
+	        var id = $scope[grid].selectedItems[0].id;
+	        for (var i = 0; i < $scope[_dataset].length; i++) {
+	            if($scope[_dataset][i].id == id) {
+	                if($scope[_dataset][i].status == 'I') {
+	                    $scope[_dataset].splice(i, 1);
 	                } else {
-	                    $scope.uip_centers[i].status = 'D';
+	                    $scope[_dataset][i].status = 'D';
 	                }
 	            }
 	        };
 	    };
 
-	    $scope.initCenter = function () {
-	        var id = $scope.gridCenter.selectedItems[0].id;
-	        for (var i = 0; i < $scope.uip_centers.length; i++) {
-	            if($scope.uip_centers[i].id == id) {
-	                for (var j = 0; j < Object.keys($scope.uip_centers[i]).length; j++) {
-	                    $scope.uip_centers[i][Object.keys($scope.uip_centers[i])[j]] = null;
+	    $scope.initData = function () {
+	        var id = $scope[grid].selectedItems[0].id;
+	        for (var i = 0; i < $scope[_dataset].length; i++) {
+	            if($scope[_dataset][i].id == id) {
+	                for (var j = 0; j < Object.keys($scope[_dataset][i]).length; j++) {
+	                    $scope[_dataset][i][Object.keys($scope[_dataset][i])[j]] = null;
 	                };
 	                break;
 	            }
 	        };
 	    };
 
-	    $scope.saveCenter = function () {
-	        var dataset = $scope.uip_centers;
+	    $scope.saveData = function () {
+	        var dataset = $scope[_dataset];
 	        for (var i = 0; i < dataset.length; i++) {
 	            var status = dataset[i].status;
 	            var currow = i;
 	            delete dataset[i].status;
+	            var params = {};
 	            if(status == 'I') {
-	                var params = {uip_center : dataset[i]};
+	                params[_dataset] = dataset[i];
 	                if(config.server == 'spring') params = dataset[i]; // java
-	                CenterService.save(params, function (data) {
-	                    $scope.uip_centers[0].id = data.uip_center.id;
+	                service.save(params, function (data) {
+	                    $scope[_dataset][0].id = data[_dataset].id;
 	                })
 	            } else if(status == 'U') {
-	                var params = {uip_center : dataset[i],
-	                             id : dataset[i].id};
-	                if(config.server == 'spring') params = params.uip_center; // java
-	                CenterService.update(params, function (data) {
-	                    $scope.uip_centers[currow] = data.uip_center;
+	            	params[_dataset] = dataset[i];
+	            	params.id = dataset[i].id;
+	                if(config.server == 'spring') params = params[_dataset]; // java
+	                service.update(params, function (data) {
+	                    $scope[_dataset][currow] = data[_dataset];
 	                })
 	            } else if(status == 'D') {
-	                CenterService.delete({"id" : dataset[i].id}, function (data) {
-	                    $scope.uip_centers.splice(currow, 1);
+	                service.delete({"id" : dataset[i].id}, function (data) {
+	                    $scope[_dataset].splice(currow, 1);
 	                })
 	            }
-	            $scope.uip_centers[i].status = 'R';
+	            $scope[_dataset][i].status = 'R';
 	        };
 	    };
 
 		var lookupDs = function ( id, callback ) {
-	    	for (var i = $scope.uip_centers.length - 1; i >= 0; i--) {
-	    		if ($scope.uip_centers[i].id == (id + '')) {
+	    	for (var i = $scope[_dataset].length - 1; i >= 0; i--) {
+	    		if ($scope[_dataset][i].id == (id + '')) {
 					callback(i);
 					break;
 				}
