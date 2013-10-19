@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sheepgridApp')
-.service('CommongridService', function () {
+.service('CommongridService', function (socket) {
 
 	var _dataset = null;	// ex) uip_center
 	var _dataset2 = null;	// ex) uip_centers
@@ -44,9 +44,50 @@ angular.module('sheepgridApp')
 	        }
 	    });    
 
+//		socket.on('connect', function() {
+//			$('#content_log').text('Connected');
+//		});
+
+//		socket.on('centers', function(msg) {
+//			$('#content_log').append($('<p>').text(msg).append(
+//					$('<em>').text(' from server')));
+//			console.log(msg);
+//		});
+		
+//	    socket.on('message', function(msg) {
+//	    	$('#content_log').append($('<p>').text(msg).append(
+//						$('<em>').text(' from server')));
+//		});
+	    
+		socket.on('inserted', function(data) {
+			$('#content_log').text(data);
+			$scope.uip_centers.unshift(data.uip_center);
+		});	
+
+		socket.on('updated', function(data) {
+			$('#content_log').text(data);
+			lookupDs(currentid, function (row){
+				$scope.uip_centers[row] = data.uip_center;
+				$scope.newCenter = $scope.uip_centers[row];
+			});
+		});	
+		
+		socket.on('deleted', function(data) {
+			$('#content_log').text(data);
+			lookupDs(data, function (row){
+				$scope.uip_centers.splice(row, 1);
+			});
+			$scope.newregion = {};
+		});	
+	    
 	    $scope.retrieveData = function (input) {
 	    	if(_input) input = _input;
 	        getDatas(input);
+	        
+		    if(config.socketLogined == false) {
+		    	config.socketLogined = true;
+				socket.emit('centers', 'centers');
+		    }
 	    };
 
 	    $scope.insertData = function () {
@@ -100,6 +141,7 @@ angular.module('sheepgridApp')
 	                if(config.server == 'spring') params = dataset[i]; // java
 	                service.save(params, function (data) {
 	                    $scope[_dataset][0].id = data[_dataset].id;
+	            		socket.emit('insert', $scope[_dataset][0]);
 	                })
 	            } else if(status == 'U') {
 	            	params[_dataset] = dataset[i];
@@ -107,10 +149,12 @@ angular.module('sheepgridApp')
 	                if(config.server == 'spring') params = params[_dataset]; // java
 	                service.update(params, function (data) {
 	                    $scope[_dataset][currow] = data[_dataset];
+	                    socket.emit('update', $scope[_dataset][currow]);
 	                })
 	            } else if(status == 'D') {
 	                service.delete({"id" : dataset[i].id}, function (data) {
 	                    $scope[_dataset].splice(currow, 1);
+	                    socket.emit('delete', currow);
 	                })
 	            }
 	            $scope[_dataset][i].status = 'R';
