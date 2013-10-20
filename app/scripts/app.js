@@ -8,7 +8,7 @@ var config = {
 	server: 'rails', // spring, rails,
 	centers: {}, // spring, rails,
 	socketLogined: false,	
-	socketUrl: 'http://127.0.0.1:8080/ui_centers'	
+	socketUrl: 'http://127.0.0.1:7002/ui_centers'	
 };
 
 angular.module('sheepgridApp', ['ngResource', 'ngGrid'])

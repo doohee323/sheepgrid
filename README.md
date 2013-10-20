@@ -12,10 +12,14 @@ This is made with these traits.
 # 3. server-side
      - ruby on rails : https://github.com/doohee323/sheepshare
      - or springframework : https://github.com/doohee323/tz.sheepshare
+# 4. socket.io
+	 - broadcast : https://github.com/doohee323/sheepsocket
 
 this app is deployed at heroku
 
 http://sheepgrid.herokuapp.com
+
+http://sheepgrid.herokuapp.com/multi.html : broadcast test
 
 There are some articles related with this app.
 

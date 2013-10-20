@@ -61,23 +61,29 @@ angular.module('sheepgridApp')
 	    
 		socket.on('inserted', function(data) {
 			$('#content_log').text(data);
-			$scope.uip_centers.unshift(data.uip_center);
+			$scope[_dataset].unshift(data[_dataset]);
+			$scope.retrieveData();
 		});	
 
+		$scope.$watch(_dataset, function() {
+	         console.log('------------------');
+	    });
+		
 		socket.on('updated', function(data) {
 			$('#content_log').text(data);
-			lookupDs(currentid, function (row){
-				$scope.uip_centers[row] = data.uip_center;
-				$scope.newCenter = $scope.uip_centers[row];
+			lookupDs(data.id, function (row){
+				$scope[_dataset][row] = data;
 			});
+			$scope.retrieveData();
 		});	
 		
 		socket.on('deleted', function(data) {
 			$('#content_log').text(data);
 			lookupDs(data, function (row){
-				$scope.uip_centers.splice(row, 1);
+				$scope[_dataset].splice(row, 1);
 			});
 			$scope.newregion = {};
+			$scope.retrieveData();
 		});	
 	    
 	    $scope.retrieveData = function (input) {
@@ -153,8 +159,8 @@ angular.module('sheepgridApp')
 	                })
 	            } else if(status == 'D') {
 	                service.delete({"id" : dataset[i].id}, function (data) {
+	                	socket.emit('delete', $scope[_dataset][currow].id);
 	                    $scope[_dataset].splice(currow, 1);
-	                    socket.emit('delete', currow);
 	                })
 	            }
 	            $scope[_dataset][i].status = 'R';
@@ -164,7 +170,7 @@ angular.module('sheepgridApp')
 		var lookupDs = function ( id, callback ) {
 	    	for (var i = $scope[_dataset].length - 1; i >= 0; i--) {
 	    		if ($scope[_dataset][i].id == (id + '')) {
-					callback(i);
+					callback(i - 1);
 					break;
 				}
 			}
