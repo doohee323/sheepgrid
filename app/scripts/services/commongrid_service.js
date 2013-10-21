@@ -79,7 +79,7 @@ angular.module('sheepgridApp')
 					$scope[_dataset][row] = data; 
 				}); 
 			});
-			//$scope.retrieveData();
+			$scope.retrieveData();
 		});	
 		
 		socket.on('deleted', function(data) {
