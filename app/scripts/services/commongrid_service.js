@@ -69,18 +69,22 @@ angular.module('sheepgridApp')
 	         console.log('------------------');
 	    });
 		
-		socket.on('updated', function(data) {
+		socket.on('updated', function(data, rootScope) {
 			$('#content_log').text(data);
-			debugger;
 			lookupDs(data.id, function (row){
 				//$scope[_dataset][row] = data;
-				$scope.$apply(function () { 
-					debugger;
-					$scope[_dataset][row] = data; 
-				}); 
+				$scope.setData2(row, data);
 			});
-			$scope.retrieveData();
+//			$scope.retrieveData();
 		});	
+
+		$scope.setData2 = function (row, data) {
+			$timeout(function() {
+				data.status = 'R';
+				debugger;
+				$scope[_dataset][row] = data; 
+			}, 1000);
+	    };		
 		
 		socket.on('deleted', function(data) {
 			$('#content_log').text(data);
@@ -173,9 +177,9 @@ angular.module('sheepgridApp')
 	    };
 
 		var lookupDs = function ( id, callback ) {
-	    	for (var i = $scope[_dataset].length - 1; i >= 0; i--) {
+	    	for (var i = 0; i < $scope[_dataset].length; i++) {
 	    		if ($scope[_dataset][i].id == (id + '')) {
-					callback(i - 1);
+					callback(i);
 					break;
 				}
 			}
