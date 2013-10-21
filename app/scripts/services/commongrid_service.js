@@ -71,10 +71,15 @@ angular.module('sheepgridApp')
 		
 		socket.on('updated', function(data) {
 			$('#content_log').text(data);
+			debugger;
 			lookupDs(data.id, function (row){
-				$scope[_dataset][row] = data;
+				//$scope[_dataset][row] = data;
+				$scope.$apply(function () { 
+					debugger;
+					$scope[_dataset][row] = data; 
+				}); 
 			});
-			$scope.retrieveData();
+			//$scope.retrieveData();
 		});	
 		
 		socket.on('deleted', function(data) {
