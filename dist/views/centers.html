@@ -12,7 +12,7 @@
                 <div ng-grid="gridCenter" class="well"></div>
               </div>
             </div>
-            <div class="span4">
+            <div class="span5">
                 <commbutton type="retrieve" data="Center"></commbutton>
                 <commbutton type="insert" data="Center"></commbutton>
                 <commbutton type="delete" data="Center"></commbutton>
@@ -23,3 +23,14 @@
     </div>
     </form>
 </div>
+
+<style type="text/css">
+.textbox {
+	width: 600px;
+	height: 150px;
+	overflow: auto;
+	margin: 5px 0;
+}
+</style>
+<span class="title">Event log</span>
+<div id="content_log" class="textbox"></div>
