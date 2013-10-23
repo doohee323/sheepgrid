@@ -67,8 +67,15 @@ angular.module('sheepgridApp')
 
 		$scope.$watch(_dataset, function() {
 	         console.log('------------------');
-	    });
+	    }, true);
 		
+		$scope.testData = function () {
+			debugger;
+			var _dataset = 'uip_center';
+			var row = $scope[_dataset].length - 1;
+	        $scope[_dataset][row + 1] = $scope[_dataset][row];
+	    };
+
 		socket.on('updated', function(data, rootScope) {
 			$('#content_log').text(data);
 			lookupDs(data.id, function (row){
