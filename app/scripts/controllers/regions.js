@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sheepgridApp')
-  .controller('RegionsCtrl', function ($scope, $location, $routeParams, $timeout, config, RegionService, CommongridService) {
+  .controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeout, $state, config, RegionService, CommongridService) {
 	$scope.$location = $location;
 
     $scope.cellValue;
@@ -34,12 +34,14 @@ angular.module('sheepgridApp')
         }
     };
     
-    var params = {uip_center_id: $routeParams.id};
+    debugger;
+    var params = {uip_center_id: $stateParams.id};
     CommongridService.init($scope, $timeout, config, RegionService, 'gridRegion', params);
 
     $scope.goHomeData = function () {
         var path = '/centers';
-        $location.path( path );
+        $state.go('default.centers');
+        //$location.path( path );
     }
 
   });

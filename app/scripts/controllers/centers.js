@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sheepgridApp')
-  .controller('CentersCtrl', function ($scope, $location, $routeParams, $timeout, config, CenterService, CommongridService) {
+  .controller('CentersCtrl', function ($scope, $location, $stateParams, $timeout, config, CenterService, CommongridService) {
 	$scope.$location = $location;
 
     $scope.cellValue;

@@ -11,29 +11,29 @@ var config = {
 	socketUrl: 'http://sheepsocket-43181.usw1.actionbox.io:5000/ui_centers'	
 };
 
-angular.module('sheepgridApp', ['ngResource', 'ngGrid'])
+angular.module('sheepgridApp', ['ngResource', 'ui.router', 'ngGrid'])
 	.constant('config', config)
-	.config(function($routeProvider, $locationProvider) {
-	$routeProvider
-	.when('/', {
-		redirectTo : '/centers'
-	})
-	.when('/centers', {
-		controller : 'CentersCtrl',
-		templateUrl : './views/centers.html'
-	})
-	.when('/center/:id', {
-		controller : 'CentersCtrl',
-		templateUrl : './views/centers.html'
-	})	
-	.when('/regions/:id', {
-		controller : 'RegionsCtrl',
-		templateUrl : '/views/regions.html'
-	})
-	.otherwise({
-		redirectTo : '/centers'
-	});
-	
+	.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+		// default route
+	    $urlRouterProvider.otherwise("/");
+	    
+		// default route
+		$stateProvider
+        .state('default', {
+            templateUrl: '/views/layout/default.html',
+            controller: 'DefaultCtrl',
+            abstract: true
+	      })
+	      .state('default.centers', {
+	        templateUrl: './views/centers.html',
+	        controller: 'CentersCtrl',
+	      })
+	      .state('default.regions', {
+	    	url: "/regions/:id",
+	        templateUrl: './views/regions.html',
+	        controller: 'RegionsCtrl',
+	      });
+
 	$locationProvider.html5Mode(true).hashPrefix('!');
 
 });
