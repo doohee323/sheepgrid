@@ -9,5 +9,4 @@ angular.module('sheepgridApp')
 			method: "PUT"
 		}
 	});
-
 });

@@ -22,11 +22,11 @@ angular.module('sheepgridApp')
         {field:'status', displayName:'CRUD', width: 50 , sortable:false, pinned:false, enableCellEdit: false },
         {field:'link', displayName:'link', width: 80, cellTemplate: '<div><button ng-click="goTo(\'/regions/\', row)">to region</button></div>'},
         {field:'id', displayName:'id', enableCellEdit: false},
-        {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
-        {field:'name', displayName:'name', editableCellTemplate: cellEditableTemplate},
-        {field:'chief', displayName:'chief', editableCellTemplate: cellEditableTemplate},
-        {field:'address', displayName:'address', editableCellTemplate: cellEditableTemplate},
-        {field:'phone', displayName:'phone', editableCellTemplate: cellEditableTemplate}
+        {field:'code', displayName:'code', enableCellEdit: true},
+        {field:'name', displayName:'name', enableCellEdit: true},
+        {field:'chief', displayName:'chief', enableCellEdit: true},
+        {field:'address', displayName:'address', enableCellEdit: true},
+        {field:'phone', displayName:'phone', enableCellEdit: true}
         ],
         selectedItems: [],
         afterSelectionChange: function (item) {

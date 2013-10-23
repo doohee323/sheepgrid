@@ -60,9 +60,10 @@ angular.module('sheepgridApp')
 //		});
 	    
 		socket.on('inserted', function(data) {
+			debugger;
 			$('#content_log').text(data);
-			$scope[_dataset].unshift(data[_dataset]);
-			$scope.retrieveData();
+			$scope[_dataset].unshift(data);
+//			$scope.retrieveData();
 		});	
 
 		$scope.$watch(_dataset, function() {
@@ -94,12 +95,11 @@ angular.module('sheepgridApp')
 	    };		
 		
 		socket.on('deleted', function(data) {
+			debugger;
 			$('#content_log').text(data);
 			lookupDs(data, function (row){
 				$scope[_dataset].splice(row, 1);
 			});
-			$scope.newregion = {};
-			$scope.retrieveData();
 		});	
 	    
 	    $scope.retrieveData = function (input) {
@@ -171,13 +171,12 @@ angular.module('sheepgridApp')
 	                if(config.server == 'spring') params = params[_dataset]; // java
 	                service.update(params, function (data) {
 	                    $scope[_dataset][currow] = data[_dataset];
-	                    socket.emit('update', $scope[_dataset][currow]);
 	                })
+                    socket.emit('update', $scope[_dataset][currow]);
 	            } else if(status == 'D') {
-	                service.delete({"id" : dataset[i].id}, function (data) {
-	                	socket.emit('delete', $scope[_dataset][currow].id);
-	                    $scope[_dataset].splice(currow, 1);
-	                })
+            		service.delete({"id" : dataset[i].id}, function (data) {
+                	})
+                	socket.emit('delete', $scope[_dataset][currow].id);
 	            }
 	            $scope[_dataset][i].status = 'R';
 	        };
