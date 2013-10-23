@@ -4,12 +4,12 @@ angular.module('sheepgridApp')
 .service('CommongridService', function (socket) {
 
 	var _dataset = null;	// ex) uip_center
-	var _dataset2 = null;	// ex) uip_centers
+	var _datasets = null;	// ex) uip_centers
 	var _input = null;	// params
 	
 	this.init = function($scope, $timeout, config, service, grid, input) {
 		_dataset = $scope[grid].data;
-		_dataset2 = _dataset + 's';
+		_datasets = _dataset + 's';
 		_input = input;
 
 	    $scope.updateEntity = function(column, row, cellValue) {
@@ -28,10 +28,10 @@ angular.module('sheepgridApp')
 	    	var params = {};
 	    	if(input) params = input;
 	        service.get(params, function(data) {
-	            for (var i = 0; i < data[_dataset2].length; i++) {
-	                data[_dataset2][i].status = 'R';
+	            for (var i = 0; i < data[_datasets].length; i++) {
+	                data[_datasets][i].status = 'R';
 	            };
-	            $scope[_dataset] = data[_dataset2];
+	            $scope[_dataset] = data[_datasets];
 	        });
 	    };
 
@@ -43,27 +43,10 @@ angular.module('sheepgridApp')
 	            $(".ngViewport").focus();
 	        }
 	    });    
-
-//		socket.on('connect', function() {
-//			$('#content_log').text('Connected');
-//		});
-
-//		socket.on('centers', function(msg) {
-//			$('#content_log').append($('<p>').text(msg).append(
-//					$('<em>').text(' from server')));
-//			console.log(msg);
-//		});
-		
-//	    socket.on('message', function(msg) {
-//	    	$('#content_log').append($('<p>').text(msg).append(
-//						$('<em>').text(' from server')));
-//		});
 	    
 		socket.on('inserted', function(data) {
-			debugger;
 			$('#content_log').text(data);
 			$scope[_dataset].unshift(data);
-//			$scope.retrieveData();
 		});	
 
 		$scope.$watch(_dataset, function() {
@@ -81,21 +64,19 @@ angular.module('sheepgridApp')
 			$('#content_log').text(data);
 			lookupDs(data.id, function (row){
 				//$scope[_dataset][row] = data;
-				$scope.setData2(row, data);
+				$timeout(function() {
+					data.status = 'R';
+					debugger;
+					$scope[_dataset][row] = data; 
+				}, 500);
 			});
-//			$scope.retrieveData();
-		});	
-
-		$scope.setData2 = function (row, data) {
 			$timeout(function() {
-				data.status = 'R';
-				debugger;
-				$scope[_dataset][row] = data; 
-			}, 1000);
-	    };		
+					document.getElementById("retrieveCenter").click();
+				}, 1000);
+			// $scope.retrieveData();
+		});	
 		
 		socket.on('deleted', function(data) {
-			debugger;
 			$('#content_log').text(data);
 			lookupDs(data, function (row){
 				$scope[_dataset].splice(row, 1);
