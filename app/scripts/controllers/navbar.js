@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('sheepgridApp')
-.controller('NavbarCtrl', function ($scope, $location, $state) {
+app.controller('NavbarCtrl', function ($scope, $location, $state) {
     $scope.$state = $state;
     $scope.$location = $location;
     

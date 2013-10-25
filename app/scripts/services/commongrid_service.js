@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('sheepgridApp')
-.service('CommongridService', function (socket) {
+app.service('CommongridService', function (socket) {
 
 	var _dataset = null;	// ex) uip_center
 	var _datasets = null;	// ex) uip_centers

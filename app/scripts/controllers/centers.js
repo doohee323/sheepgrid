@@ -1,40 +1,35 @@
 'use strict';
 
-angular.module('sheepgridApp')
-  .controller('CentersCtrl', function ($scope, $location, $stateParams, $timeout, config, CenterService, CommongridService) {
+app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeout, config, CenterService) {
 	$scope.$location = $location;
 
     $scope.cellValue;
     var checkboxCellTemplate='<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>';
     var cellEditableTemplate = "<input style=\"width: 90%\" step=\"any\" type=\"string\" ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-blur=\"updateEntity(col, row, cellValue)\" ng-model='cellValue'/>";
-    $scope.gridCenter = {
-        data: 'uip_center',
-        multiSelect: false,  
-        enableCellSelection: true,
-        enableCellEditOnFocus: true,
-        enableRowSelection: true,
-        enablePinning: true,
-        enableSorting: true,
-        columnDefs: [
-        {field:'CHK', displayName:'chk', width: 50 , 
-            cellTemplate:checkboxCellTemplate,
-            sortable:false, pinned:false, enableCellEdit: false },
-        {field:'status', displayName:'CRUD', width: 50 , sortable:false, pinned:false, enableCellEdit: false },
-        {field:'link', displayName:'link', width: 80, cellTemplate: '<div><button ng-click="goTo(\'/regions/\', row)">to region</button></div>'},
-        {field:'id', displayName:'id', enableCellEdit: false},
-        // {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
-        {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
-        {field:'name', displayName:'name', editableCellTemplate: cellEditableTemplate},
-        {field:'chief', displayName:'chief', editableCellTemplate: cellEditableTemplate},
-        {field:'address', displayName:'address', editableCellTemplate: cellEditableTemplate},
-        {field:'phone', displayName:'phone', editableCellTemplate: cellEditableTemplate}
-        ],
-        selectedItems: [],
-        afterSelectionChange: function (item) {
-            $scope.newRegion = item.entity;
-        }
-    };
-	
-	CommongridService.init($scope, $timeout, config, CenterService, 'gridCenter');
-	
+    $scope.columnDefs = [
+                         {field:'CHK', displayName:'chk', width: 50 , 
+                             cellTemplate:checkboxCellTemplate,
+                             sortable:false, pinned:false, enableCellEdit: false },
+                         {field:'status', displayName:'CRUD', width: 50 , sortable:false, pinned:false, enableCellEdit: false },
+                         {field:'link', displayName:'link', width: 80, cellTemplate: '<div><button ng-click="goTo(\'/regions/\', row)">to region</button></div>'},
+                         {field:'id', displayName:'id', enableCellEdit: false},
+                         // {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
+                         {field:'code', displayName:'code', editableCellTemplate: cellEditableTemplate},
+                         {field:'name', displayName:'name', editableCellTemplate: cellEditableTemplate},
+                         {field:'chief', displayName:'chief', editableCellTemplate: cellEditableTemplate},
+                         {field:'address', displayName:'address', editableCellTemplate: cellEditableTemplate},
+                         {field:'phone', displayName:'phone', editableCellTemplate: cellEditableTemplate}
+                         ];
+    
+	$scope.$watch('uip_center', function(){
+		if($scope.gridInit) {
+		    $scope.gridInit(CenterService);
+		    $scope.getDatas();
+		}
+	}, true);
+    
+    $scope.addContact = function(){
+		$scope.ngExcelData.push({name:$scope.newName, contact:$scope.newContact});
+	}
+    
   });

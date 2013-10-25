@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('sheepgridApp')
-  .controller('DefaultCtrl', function ($scope) {
+app.controller('DefaultCtrl', function ($scope) {
   })
  .controller('GlobalCtrl', function ($scope, $location, $state) {
     $scope.$state = $state;

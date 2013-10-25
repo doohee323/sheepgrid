@@ -11,8 +11,9 @@ var config = {
 	socketUrl: 'http://sheepsocket-43181.usw1.actionbox.io:5000/ui_centers'	
 };
 
-angular.module('sheepgridApp', ['ngResource', 'ui.router', 'ngGrid'])
-	.constant('config', config)
+var app = angular.module('sheepgridApp', ['ngResource', 'ui.router', 'ngGrid'])
+
+app.constant('config', config)
 	.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		// default route
 	    $urlRouterProvider.otherwise("/");

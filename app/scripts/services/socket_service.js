@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('sheepgridApp')
-.factory('socket', function ($rootScope, config) {
+app.factory('socket', function ($rootScope, config) {
 	var socket = io.connect(config.socketUrl);
   socket.on('connect',function() {
       console.log('Client has connected to the server!');
