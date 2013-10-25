@@ -9,7 +9,7 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	var _input;		// params
 	
 	var getTemplate = function(grid) {
-		return "<div ng-_grid=\"" + grid + "\" ng-style=\"myprop()\"></div>";
+		return "<div ng-grid=\"" + grid + "\" ng-style=\"myprop()\"></div>";
 	};
 	
 	var linker = function(scope, element, attr) {
@@ -44,7 +44,6 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 		};		
 		
 		scope.updateEntity = function(column, row, cellValue) {
-			debugger;
 	        var data = scope[_dataset][row.rowIndex];
 	        var status = scope[_dataset][row.rowIndex].status;
 	        if(status && status == 'I') {
@@ -86,6 +85,7 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	    scope.retrieveData = function (input) {
 	    	if(_input) input = _input;
 	    	scope.getDatas(input);
+	    	debugger;
 		    if(config.socketLogined == false) {
 		    	config.socketLogined = true;
 				socket.emit('centers', 'centers');
@@ -133,6 +133,7 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	    };
 
 	    scope.saveData = function () {
+	    	debugger;
 	        var dataset = scope[_dataset];
 	        for (var i = 0; i < dataset.length; i++) {
 	            var status = dataset[i].status;
@@ -153,6 +154,7 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	                _service.update(params, function (data) {
 	                    scope[_dataset][currow] = data[_dataset];
 	                })
+	                debugger;
                     socket.emit('update', scope[_dataset][currow]);
 	            } else if(status == 'D') {
             		_service.delete({"id" : dataset[i].id}, function (data) {
