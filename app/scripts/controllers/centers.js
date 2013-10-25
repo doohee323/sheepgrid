@@ -6,7 +6,7 @@ app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeou
     $scope.cellValue;
     var checkboxCellTemplate='<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>';
     var cellEditableTemplate = "<input style=\"width: 90%\" step=\"any\" type=\"string\" ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-blur=\"updateEntity(col, row, cellValue)\" ng-model='cellValue'/>";
-    $scope.columnDefs = [
+    var columnDefs = [
                          {field:'CHK', displayName:'chk', width: 50 , 
                              cellTemplate:checkboxCellTemplate,
                              sortable:false, pinned:false, enableCellEdit: false },
@@ -22,8 +22,8 @@ app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeou
                          ];
     
 	$scope.$watch('uip_center', function(){
-		if($scope.gridInit) {
-		    $scope.gridInit(CenterService);
+		if($scope.gridInit && !$scope['gridCenter']) {
+		    $scope.gridInit(CenterService, columnDefs);
 		    $scope.getDatas();
 		}
 	}, true);

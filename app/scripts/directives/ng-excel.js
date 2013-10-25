@@ -1,46 +1,47 @@
 'use strict';
 
-app.directive('ngExcel', function($compile, $timeout, config){
+app.directive('ngExcel', function($compile, $timeout, config, socket){
 	
-	var _service = null;
-	var _grid = null;
-	var _dataset = null;	// ex) uip_center
-	var _datasets = null;	// ex) uip_centers
-	var _input = null;	// params
+	var _service;
+	var _grid;
+	var _dataset;	// ex) uip_center
+	var _datasets;	// ex) uip_centers
+	var _input;		// params
 	
-	var getTemplate = function(_grid) {
-		return "<div ng-grid=\"" + _grid + "\" ng-style=\"myprop()\"></div>";
+	var getTemplate = function(grid) {
+		return "<div ng-_grid=\"" + grid + "\" ng-style=\"myprop()\"></div>";
 	};
 	
 	var linker = function(scope, element, attr) {
-		debugger;
 		_grid = attr['id'];
 		_dataset = attr['data'];
 
-		scope[_grid] = {
-		        data: _dataset,
-		        multiSelect: false,  
-		        enableCellSelection: true,
-		        enableRowSelection: true,
-		        enableSorting: true,
-		        columnDefs: 'columnDefs',
-		        selectedItems: []
-		    };
-		
-		element.html(getTemplate(_grid)).show();
-//		element.bind('click', function() {
-//			eval('scope.' + attr["type"] + attr["data"] + '()');
-//			return;
-//		});
-		$compile(element.contents())(scope);
-		
-		scope.gridInit = function(service, input) {
-			debugger;
+		scope.gridInit = function(service, columnDefs, input) {
 			_service = service;
-			_dataset = scope[_grid].data;
-			_datasets = _dataset + 's';
 			_input = input;
-		}				
+			_datasets = _dataset + 's';
+			
+			scope[_grid] = {
+			        data: _dataset,
+			        multiSelect: false,  
+			        enableCellSelection: true,
+			        enableCellEditOnFocus: true,
+			        enableRowSelection: true,
+			        enablePinning: true,
+			        enableSorting: true,
+			        columnDefs: columnDefs,
+			        selectedItems: []
+			    };
+			
+			element.html(getTemplate(_grid)).show();
+//			element.bind('click', function() {
+//				eval('scope.' + attr["type"] + attr["data"] + '()');
+//				return;
+//			});
+			$compile(element.contents())(scope);
+			
+			scope[_grid].attr = attr;
+		};		
 		
 		scope.updateEntity = function(column, row, cellValue) {
 			debugger;
@@ -55,9 +56,9 @@ app.directive('ngExcel', function($compile, $timeout, config){
 	        row.entity[column.field] = cellValue;
 	    };
 		
-		scope[_grid].attr = attr;
 		scope.$watch(_dataset, function(newData){
 			scope.myprop = function() {
+				//scope[_grid].columnDefs = _columnDefs;
 				var attr = scope[_grid].attr;
 				if(attr) {
 		            return {
@@ -73,7 +74,6 @@ app.directive('ngExcel', function($compile, $timeout, config){
 
 		scope.getDatas = function(input) {
 	    	var params = {};
-	    	debugger;
 	    	if(input) params = input;
 	    	_service.get(params, function(data) {
 	            for (var i = 0; i < data[_datasets].length; i++) {
@@ -82,7 +82,115 @@ app.directive('ngExcel', function($compile, $timeout, config){
 	            scope[_dataset] = data[_datasets];
 	        });
 	    };
-		
+
+	    scope.retrieveData = function (input) {
+	    	if(_input) input = _input;
+	    	scope.getDatas(input);
+		    if(config.socketLogined == false) {
+		    	config.socketLogined = true;
+				socket.emit('centers', 'centers');
+		    }
+	    };
+
+	    scope.insertData = function () {
+	        var data = scope[_grid].columnDefs;
+	        var newData = getAddRow(data);
+	        if(_input) newData = mergeData(_input, newData);
+	        newData.status = 'I';
+	        scope[_dataset].unshift(newData);
+
+	        var selectRow = function() {
+	            scope[_grid].selectRow(0, true);
+	            //$($($(".ngCellText.col3.colt1")[1]).parent()).parent().focus();
+	        }
+	        $timeout(selectRow, 500);
+	    };
+
+	    scope.deleteData = function () {
+	        var id = scope[_grid].selectedItems[0].id;
+	        for (var i = 0; i < scope[_dataset].length; i++) {
+	            if(scope[_dataset][i].id == id) {
+	                if(scope[_dataset][i].status == 'I') {
+	                    scope[_dataset].splice(i, 1);
+	                } else {
+	                    scope[_dataset][i].status = 'D';
+	                }
+	            }
+	        };
+	    };
+
+	    scope.initData = function () {
+	    	if(!scope[_grid].selectedItems[0]) return;
+	        var id = scope[_grid].selectedItems[0].id;
+	        for (var i = 0; i < scope[_dataset].length; i++) {
+	            if(scope[_dataset][i].id == id) {
+	                for (var j = 0; j < Object.keys(scope[_dataset][i]).length; j++) {
+	                    scope[_dataset][i][Object.keys(scope[_dataset][i])[j]] = null;
+	                };
+	                break;
+	            }
+	        };
+	    };
+
+	    scope.saveData = function () {
+	        var dataset = scope[_dataset];
+	        for (var i = 0; i < dataset.length; i++) {
+	            var status = dataset[i].status;
+	            var currow = i;
+	            delete dataset[i].status;
+	            var params = {};
+	            if(status == 'I') {
+	                params[_dataset] = dataset[i];
+	                if(config.server == 'spring') params = dataset[i]; // java
+	                _service.save(params, function (data) {
+	                    scope[_dataset][0].id = data[_dataset].id;
+	            		socket.emit('insert', scope[_dataset][0]);
+	                })
+	            } else if(status == 'U') {
+	            	params[_dataset] = dataset[i];
+	            	params.id = dataset[i].id;
+	                if(config.server == 'spring') params = params[_dataset]; // java
+	                _service.update(params, function (data) {
+	                    scope[_dataset][currow] = data[_dataset];
+	                })
+                    socket.emit('update', scope[_dataset][currow]);
+	            } else if(status == 'D') {
+            		_service.delete({"id" : dataset[i].id}, function (data) {
+                	})
+                	socket.emit('delete', scope[_dataset][currow].id);
+	            }
+	            scope[_dataset][i].status = 'R';
+	        };
+	    };
+
+		var lookupDs = function ( id, callback ) {
+	    	for (var i = 0; i < scope[_dataset].length; i++) {
+	    		if (scope[_dataset][i].id == (id + '')) {
+					callback(i);
+					break;
+				}
+			}
+		}
+
+		var getAddRow = function(source) {
+	        var data = angular.copy(source);
+	        var target = {};
+	        for (var i = 0; i < data.length; i++) {
+	            if(data[i].field 
+	            	&& data[i].field != 'link'
+	            	&& data[i].field != 'CHK') {
+	                target[data[i].field] = null;
+	            }
+	        };
+	        return target;
+	    };		
+
+	    var mergeData = function(source, target) {
+	        for (var j = 0; j < Object.keys(source).length; j++) {
+                target[Object.keys(source)[j]] = source[Object.keys(source)[j]];
+            };
+	        return target;
+	    };
 	};
 	
 	return {

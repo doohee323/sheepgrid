@@ -1,7 +1,12 @@
 'use strict';
 
 app.factory('socket', function ($rootScope, config) {
-	var socket = io.connect(config.socketUrl);
+	var socket = null;
+	try {
+		socket = io.connect(config.socketUrl);
+	} catch (e) {
+		return;
+	}
   socket.on('connect',function() {
       console.log('Client has connected to the server!');
     });
