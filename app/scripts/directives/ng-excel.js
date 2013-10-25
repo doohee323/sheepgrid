@@ -57,7 +57,6 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 		
 		scope.$watch(_dataset, function(newData){
 			scope.myprop = function() {
-				//scope[_grid].columnDefs = _columnDefs;
 				var attr = scope[_grid].attr;
 				if(attr) {
 		            return {
@@ -85,7 +84,6 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	    scope.retrieveData = function (input) {
 	    	if(_input) input = _input;
 	    	scope.getDatas(input);
-	    	debugger;
 		    if(config.socketLogined == false) {
 		    	config.socketLogined = true;
 				socket.emit('centers', 'centers');
