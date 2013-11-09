@@ -33,5 +33,4 @@ app.controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeou
         $state.go('default.centers');
         //$location.path( path );
     }
-
   });
