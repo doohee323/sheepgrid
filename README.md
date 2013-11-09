@@ -1,6 +1,8 @@
 sheepgrid
 ========
 
+demo site : http://sheepgrid.herokuapp.com/multi.html
+
 web app with angular.js and bootstrap
 
 This is made with these traits.
