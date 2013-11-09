@@ -20,12 +20,7 @@ app.controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeou
 		        {field:'address', displayName:'address', editableCellTemplate: cellEditableTemplate}
                  ];
     
-    $scope.init = function () {
-    	debugger;
-    };
-    
 	$scope.$watch('uip_region', function(){
-    	debugger;
 		if($scope.gridInit && !$scope['gridRegion']) {
 		    var params = {uip_center_id: $stateParams.id};
 		    $scope.gridInit(RegionService, columnDefs, params);

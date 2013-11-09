@@ -67,7 +67,6 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 					return {};
 				}
 	        };
-			console.log(newData);
 		}, true);
 
 		scope.getDatas = function(input) {
@@ -78,16 +77,16 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	                data[_datasets][i].status = 'R';
 	            };
 	            scope[_dataset] = data[_datasets];
+			    if(config.socketLogined == false) {
+			    	config.socketLogined = true;
+					socket.emit('centers', 'centers');
+			    }
 	        });
 	    };
 
 	    scope.retrieveData = function (input) {
 	    	if(_input) input = _input;
 	    	scope.getDatas(input);
-		    if(config.socketLogined == false) {
-		    	config.socketLogined = true;
-				socket.emit('centers', 'centers');
-		    }
 	    };
 
 	    scope.insertData = function () {
@@ -131,7 +130,6 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	    };
 
 	    scope.saveData = function () {
-	    	debugger;
 	        var dataset = scope[_dataset];
 	        for (var i = 0; i < dataset.length; i++) {
 	            var status = dataset[i].status;
@@ -152,10 +150,13 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
 	                _service.update(params, function (data) {
 	                    scope[_dataset][currow] = data[_dataset];
 	                })
-	                debugger;
                     socket.emit('update', scope[_dataset][currow]);
 	            } else if(status == 'D') {
+	            	scope.uip_center.curid = dataset[i].id;
             		_service.delete({"id" : dataset[i].id}, function (data) {
+            			lookupDs(scope.uip_center.curid, function (row){
+							scope[_dataset].splice(row, 1);
+						});
                 	})
                 	socket.emit('delete', scope[_dataset][currow].id);
 	            }
@@ -191,6 +192,44 @@ app.directive('ngExcel', function($compile, $timeout, config, socket){
             };
 	        return target;
 	    };
+
+	    ///////////////////////////////////////////////////////////////////////
+	    // socket.io callback func begin
+	    ///////////////////////////////////////////////////////////////////////
+		socket.on('inserted', function(data) {
+			$('#content_log').text(data);
+			scope[_dataset].unshift(data);
+		});	
+
+		socket.on('updated', function(data, rootScope) {
+			$('#content_log').text(data);
+			// scope 문제로 정상 호출되지 않아 임의로 조회함
+			// - 상세 설명 : socket.io 에 의해서 호출되었을 경우 $scope.apply 가 제대로 이루어지지 않아 binding을 할수 없음
+			// 원인은 ng-grid의 cell 에대한 변경여부를 확인하기 위해서 기술된 cellEditableTemplate 에 별도의 scope가 추가되었기 때문임
+			// 변경된 값을 인지하는 방법의 변경이 필요함
+			scope.retrieveData();
+
+			// lookupDs(data.id, function (row){
+			// 	//scope[_dataset][row] = data;
+			// 	$timeout(function() {
+			// 		data.status = 'R';
+			// 		scope[_dataset][row] = data; 
+			// 	}, 500);
+			// });
+			// $timeout(function() {
+			// 	document.getElementById("retrieveCenter").click();
+			// }, 1000);
+		});	
+		
+		socket.on('deleted', function(data) {
+			$('#content_log').text(data);
+			lookupDs(data, function (row){
+				scope[_dataset].splice(row, 1);
+			});
+		});	
+	    ///////////////////////////////////////////////////////////////////////
+	    // socket.io callback func end
+	    ///////////////////////////////////////////////////////////////////////
 	};
 	
 	return {

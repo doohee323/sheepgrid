@@ -1,4 +1,4 @@
-<div class="regions view" ng-controller="RegionsCtrl">
+<div class="regions view" ng-controller="RegionsCtrl" ng-init="init()">
     <form class="ui form segment">
     <div class="container">
         <header>
@@ -10,9 +10,7 @@
             <select ng-model="uip_center" ng-selected="center_id" ng-change="getRegions()" ng-options="uip_center.name for uip_center in uip_center | orderBy:orderby:reverse"></select>
            </h4>
             <div class="ngGrid">
-              <div>
-                <div ng-grid="gridRegion" class="well"></div>
-              </div>
+              <ng-excel id="gridRegion" data="uip_region" rows="100" cols="100" width="100%" height="200"></ng-excel>
             </div>
             <div class="span5">
                 <commbutton type="retrieve" data="Region"></commbutton>
