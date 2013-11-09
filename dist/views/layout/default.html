@@ -1,0 +1,62 @@
+<!--[if lt IE 7]>
+  <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- dddddddddd start -->
+  <!-- BOOTSTRAP 3.x LAYOUT -->
+  <div id="wrap">
+    <div class="navbar navbar-inverse navbar-static-top">
+      <div class="container">
+        <a class="navbar-toggle" data-toggle="collapse"
+          data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+          class="icon-bar"></span> <span class="icon-bar"></span>
+        </a> 
+          <a class="brand" ui-sref="default.centers">             
+            <img src="images/people.png" alt="logo"> Topzone 2013 
+          </a>
+        <div class="nav-collapse collapse">
+          <ul class="nav nav-pills">
+            <li><a ui-sref="default.centers" ng-show="!$state.is('default.centers')">Centers</a></li>
+            <li><a ui-sref="default.regions" ng-show="!$state.is('default.regions')">Regions</a></li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li class="dropdown"><a href="#" class="dropdown-toggle"
+              data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li class="nav-header">List</li>
+                <li><a ui-sref="default.centers">Centers</a></li>
+                <li><a ui-sref="default.regions">Regions</a></li>
+                <li class="divider"></li>
+                <li class="nav-header">Login</li>
+                <li><a href="#/">login</a></li>
+              </ul></li>
+            <li class=""><a href="">login</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add your site or application content here -->
+	  <div class="container" ui-view></div>
+  
+      <div id="footer">
+      <div class="navbar navbar-fixed-bottom">
+        <div class="navbar-inner">
+          <div class="container">
+            <footer>
+              <div class="row">
+                <div class="span4">Created by Dewey Hong</div>
+                <div class="span4">
+                  Github: <a href="https://github.com/doohee323" target='_blank'>@DeweyHong</a>
+                </div>
+                <div class="span4">
+                  	Intro: <a href="intro.html" target='_blank'>dev. environment</a>
+                </div>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- dddddddddd end -->
+
