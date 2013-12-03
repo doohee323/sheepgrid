@@ -33,4 +33,17 @@ app.controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeou
         $state.go('default.centers');
         //$location.path( path );
     }
+    
+	$scope.$on('$viewContentLoading', function(event,
+			viewConfig) {
+		debugger;
+		// Access to all the view config properties.
+		// and one special property 'targetView'
+		// viewConfig.targetView
+	});
+
+	$scope.$on('$viewContentLoaded', function(event) {
+		debugger;
+	});
+    
   });

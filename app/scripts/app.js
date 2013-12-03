@@ -9,7 +9,7 @@ var config = {
 	centers: {}, // spring, rails,
 	socketLogined: false,	
 	socketUrl: 'http://sheepsocket-43181.usw1.actionbox.io:5000/ui_centers'	
-	// socketUrl: 'http://localhost:5000/ui_centers'	
+	// socketUrl: 'http://localhost:5000/ui_centers'
 };
 
 var app = angular.module('sheepgridApp', ['ngResource', 'ui.router', 'ngGrid'])
@@ -37,5 +37,7 @@ app.constant('config', config)
 	      });
 
 	$locationProvider.html5Mode(true).hashPrefix('!');
+	
+	
 
 });

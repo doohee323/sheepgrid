@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeout, config, CenterService) {
+app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeout, $state, config, CenterService) {
 	$scope.$location = $location;
 
     $scope.cellValue;
@@ -27,4 +27,39 @@ app.controller('CentersCtrl', function ($scope, $location, $stateParams, $timeou
 		    $scope.getDatas();
 		}
 	}, true);
+						
+	$scope.$on('$stateChangeStart', function(event, toState,
+			toParams, fromState, fromParams) {
+		debugger;
+		// event.preventDefault();
+		// transitionTo() promise will be rejected with
+		// a 'transition prevented' error
+	});
+
+	$scope.$on('$viewContentLoading', function(event,
+			viewConfig) {
+		debugger;
+		// Access to all the view config properties.
+		// and one special property 'targetView'
+		// viewConfig.targetView
+	});
+
+	$scope.$on('$viewContentLoaded', function(event) {
+		debugger;
+	});
+
+	// somewhere else
+	$scope.$on('$stateNotFound', function(event, unfoundState,
+			fromState, fromParams) {
+		debugger;
+		console.log(unfoundState.to); // "lazy.state"
+		console.log(unfoundState.toParams); // {a:1, b:2}
+		console.log(unfoundState.options); // {inherit:false} +
+											// default options
+	});
+
+	$scope.goEmptData = function() {
+		$state.go('default.test');
+	}
+    
   });
