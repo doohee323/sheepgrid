@@ -2,10 +2,10 @@
 
 var config = {
 	// url : 'http://localhost\\:3000',
-	url: 'http://sheeprails.herokuapp.com',
-	// url : 'http://localhost\\:7001/rest',
+	//url: 'http://sheeprails.herokuapp.com',
+	url : 'http://localhost\\:7001/rest',
 	// url : '/pattern/pt42/masterdetail',
-	server: 'rails', // spring, rails,
+	server: 'spring', // spring, rails,
 	centers: {}, // spring, rails,
 	socketLogined: false,	
 	socketUrl: 'http://sheepsocket-43181.usw1.actionbox.io:5000/ui_centers'	

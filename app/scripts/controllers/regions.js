@@ -36,14 +36,14 @@ app.controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeou
     
 	$scope.$on('$viewContentLoading', function(event,
 			viewConfig) {
-		debugger;
+		//debugger;
 		// Access to all the view config properties.
 		// and one special property 'targetView'
 		// viewConfig.targetView
 	});
 
 	$scope.$on('$viewContentLoaded', function(event) {
-		debugger;
+		//debugger;
 	});
     
   });
