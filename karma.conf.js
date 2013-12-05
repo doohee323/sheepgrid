@@ -13,6 +13,11 @@ module.exports = function(config) {
     files: [
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
+      'app/bower_components/angular-resource/angular-resource.js',
+      'app/bower_components/angular-ui-router/release/angular-ui-router.js',
+      'app/bower_components/jquery/jquery.js',
+      'app/bower_components/ng-grid/ng-grid-2.0.7.min.js',
+      'app/bower_components/moment/min/moment-with-langs.js',
       'app/scripts/*.js',
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
