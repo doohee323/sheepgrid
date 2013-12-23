@@ -22,7 +22,7 @@ app.controller('RegionsCtrl', function ($scope, $location, $stateParams, $timeou
     
 	$scope.$watch('uip_region', function(){
 		if($scope.gridInit && !$scope['gridRegion']) {
-		    var params = {uip_center_id: $stateParams.id};
+		    var params = {id: $stateParams.id};
 		    $scope.gridInit(RegionService, columnDefs, params);
 		    $scope.getDatas();
 		}
